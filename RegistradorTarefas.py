@@ -3,6 +3,9 @@ import datetime
 import time
 import requests
 
+global caminhoArquivo
+caminhoArquivo = r"C:\Users\Acer\OneDrive\Documentos\tarefas" #O resto será preechido por strings
+
 global verificador
 verificador= "False"
 dias_da_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']
@@ -51,7 +54,7 @@ def lerArquivoMostrar():
     data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
     for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
         data_atual = data_atual.replace(dia, dias_da_semana[i])
-    nome_arquivo = f"tarefas de {data_atual}.txt"
+    nome_arquivo = caminhoArquivo + " de " + data_atual + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
     if os.path.exists(nome_arquivo):
         with open(nome_arquivo, "r") as arquivo:
             conteudo = arquivo.read()
@@ -94,7 +97,7 @@ def tarefasExecutar():
     data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
     for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
         data_atual = data_atual.replace(dia, dias_da_semana[i])
-    nome_arquivo = f"tarefas de {data_atual}.txt"
+    nome_arquivo = caminhoArquivo + " de " + data_atual + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
 
     # verifica se o arquivo já existe, se não existir, cria um novo
     if not os.path.exists(nome_arquivo):
