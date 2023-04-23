@@ -7,7 +7,11 @@ global verificador
 verificador= "False"
 dias_da_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']
 
-
+# Buscar credenciais - informacoes que nao podem estar no codigo principal
+with open('credenciaisAPI-OpenWeather.txt') as f:
+    conteudo = f.readlines()
+    cidade = conteudo[1].split(';')[0].strip()  #Ler segunda linha coluna 1 (separacao ";" )
+    api_key = conteudo[1].split(';')[1].strip() #Ler segunda linha coluna 2 (separacao ";" )
 
 # Verifica conectividade com a internet
 try:
@@ -19,7 +23,6 @@ except requests.exceptions.ConnectionError:
     
 if net == 1:
     # Previsão do tempo API OpenWeather
-    cidade, api_key = 'Sua_Cidade,BR', 'sua_API'
     url = f'https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}&units=metric'
     response = requests.get(url)
     data = response.json()
