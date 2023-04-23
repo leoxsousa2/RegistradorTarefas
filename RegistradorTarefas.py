@@ -4,11 +4,16 @@ import time
 
 
 
+def reniciar():
+    global verificador
+    verificador= "False"
+    lerArquivoMostrar()
+
 def lerArquivoMostrar():
 
     # Limpa o terminal 
     os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-    print("Digite s para sair ou d para modo discreto")
+    print("Digite s=sair ou d=modo discreto ou r=reiniciar")
     print("     ")
     
     # lê o arquivo de tarefas se existir e mostra no terminal
@@ -24,9 +29,15 @@ def lerArquivoMostrar():
 
 
 def tarefasExecutar():
+    # Limpa o terminal 
+    print("Digite s=sair ou d=modo discreto ou r=reiniciar")
+    print("     ")
 
     # pede para o usuário informar a tarefa
     tarefa = input("Qual tarefa você vai realizar? ")
+
+    if tarefa == "r":
+        reniciar()
 
     # verifica se o usuário informou "s" e encerra o programa se for o caso
     if tarefa == "s":
@@ -37,15 +48,16 @@ def tarefasExecutar():
 
     # verifica se o usuário informou "d" o programa para de mostrar informacoes do arquivo
     if tarefa == "d":
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
         print("     ")
         print("modo discreto ativado")
+        print("     ")
         time.sleep(2)
         global verificador
         verificador= "True"
-        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-        print("Digite s para sair ou d para modo discreto")
-        print("     ")
         tarefasExecutar()
+
+
 
     # gera o nome do arquivo com a data atual
     data_atual = datetime.datetime.now().strftime("%d-%m-%Y")
@@ -62,24 +74,24 @@ def tarefasExecutar():
     with open(nome_arquivo, "a") as arquivo:
         arquivo.write(f"{id_tarefa}\t{data_atual}\t{hora_atual}\t{tarefa}\n")
 
+    print("     ")
     print(f"Tarefa registrada com sucesso no arquivo {nome_arquivo}!")
+    print("     ")
     time.sleep(5)
 
+
     if verificador == "True":
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
         print("     ")
         print("modo discreto ativado")
-        time.sleep(2)
-        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-        print("Digite s para sair ou d para modo discreto")
         print("     ")
+        time.sleep(2)
         tarefasExecutar()
+
+
+
+
 
     lerArquivoMostrar()
 
-
-
-
-
 lerArquivoMostrar() # Inicia a função 
-
-        
