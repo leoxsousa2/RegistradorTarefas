@@ -7,16 +7,28 @@ global verificador
 verificador= "False"
 dias_da_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']
 
-# Previsão do tempo API OpenWeather
-cidade, api_key = 'Sua_Cidade,BR', 'sua_API'
-url = f'https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}&units=metric'
-response = requests.get(url)
-data = response.json()
-temperatura = data['main']['temp']
-tempo = data['weather'][0]['description']
-umidade = data['main']['humidity']
-PrevisaoTempo= f'Previsão do tempo para {cidade}: Temp: {data["main"]["temp"]}°C - Descrição: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}%'
 
+
+# Verifica conectividade com a internet
+try:
+    requests.get('https://www.google.com/')
+    net=1
+except requests.exceptions.ConnectionError:
+    print('Erro: sem conexão com a internet')
+    net=0
+    
+if net == 1:
+    # Previsão do tempo API OpenWeather
+    cidade, api_key = 'Sua_Cidade,BR', 'sua_API'
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}&units=metric'
+    response = requests.get(url)
+    data = response.json()
+    temperatura = data['main']['temp']
+    tempo = data['weather'][0]['description']
+    umidade = data['main']['humidity']
+    PrevisaoTempo= f'Previsão do tempo para {cidade}: Temp: {data["main"]["temp"]}°C - Descrição: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}%'
+if net == 0:
+    PrevisaoTempo='Erro: Não tempo como verificar a previsão do tempo. Sem conexão com a internet'
 
 
 def reniciar():
