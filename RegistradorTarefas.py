@@ -2,20 +2,28 @@ import os
 import datetime
 import time
 
-def tarefasExecutar():
+
+
+def lerArquivoMostrar():
 
     # Limpa o terminal 
     os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-    print("Digite s para sair")
+    print("Digite s para sair ou d para modo discreto")
     print("     ")
     
     # lê o arquivo de tarefas se existir e mostra no terminal
-    data_atual = datetime.datetime.now().strftime("%d-%m-%Y") 
+    data_atual = datetime.datetime.now().strftime("%d-%m-%Y")
     nome_arquivo = f"tarefas do dia {data_atual}.txt"
     if os.path.exists(nome_arquivo):
         with open(nome_arquivo, "r") as arquivo:
             conteudo = arquivo.read()
         print(conteudo)
+    
+    tarefasExecutar()
+
+
+
+def tarefasExecutar():
 
     # pede para o usuário informar a tarefa
     tarefa = input("Qual tarefa você vai realizar? ")
@@ -24,10 +32,23 @@ def tarefasExecutar():
     if tarefa == "s":
         print("Programa encerrado.")
         time.sleep(2)
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
         exit()
 
+    # verifica se o usuário informou "d" o programa para de mostrar informacoes do arquivo
+    if tarefa == "d":
+        print("     ")
+        print("modo discreto ativado")
+        time.sleep(2)
+        global verificador
+        verificador= "True"
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        print("Digite s para sair ou d para modo discreto")
+        print("     ")
+        tarefasExecutar()
+
     # gera o nome do arquivo com a data atual
-    data_atual = datetime.datetime.now().strftime("%d-%m-%Y") 
+    data_atual = datetime.datetime.now().strftime("%d-%m-%Y")
     nome_arquivo = f"tarefas do dia {data_atual}.txt"
 
     # verifica se o arquivo já existe, se não existir, cria um novo
@@ -44,7 +65,21 @@ def tarefasExecutar():
     print(f"Tarefa registrada com sucesso no arquivo {nome_arquivo}!")
     time.sleep(5)
 
-    tarefasExecutar() # Inicia a função tarefasExecutar  # indica que o programa deve continuar em loop
+    if verificador == "True":
+        print("     ")
+        print("modo discreto ativado")
+        time.sleep(2)
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        print("Digite s para sair ou d para modo discreto")
+        print("     ")
+        tarefasExecutar()
+
+    lerArquivoMostrar()
 
 
-tarefasExecutar() # Inicia a função tarefasExecutar
+
+
+
+lerArquivoMostrar() # Inicia a função 
+
+        
