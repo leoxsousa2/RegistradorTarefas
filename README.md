@@ -1,13 +1,13 @@
 # RegistradorDeTarefas
-Este programa registra as tarefas informadas com data e hora e depois grava em um arquivo txt. Quando for registrar uma nova tarefa, o programa verifica o arquivo e informa as tarefas que já foram registradas para depois perguntar qual será a nova tarefa.
+Este programa registra as tarefas informadas com data e hora e depois grava em um arquivo txt. O programa registra também a previsão do tempo. Quando for registrar uma nova tarefa, o programa verifica o arquivo e informa as tarefas que já foram registradas para depois perguntar qual será a nova tarefa. Caso não queira que o programa mostre suas tarefa é só selecionar o modo discreto.
 
 # Exemplo do funcionameto do programa (python):
 
-Digite s para sair
+Digite s=sair ou d=modo discreto ou r=reiniciar
+
+Previsão do tempo para Aracaju,BR: Temp: 23.97°C - Descrição: few clouds - Humidade: 94%
 
 * ID      Data    Hora    Tarefa
-* 1       22-04-2023      16:41:14        teste1
-* 2       22-04-2023      16:41:22        teste2
-* 3       22-04-2023      16:41:30        teste3
-
-Qual tarefa você vai realizar?
+* 3       Dom 23-04-2023  02:59:44        teste1
+* 4       Dom 23-04-2023  02:59:53        teste2
+* 5       Dom 23-04-2023  03:00:02        teste3
