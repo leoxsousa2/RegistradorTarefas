@@ -2,6 +2,8 @@ import os
 import datetime
 import time
 
+global verificador
+verificador= "False"
 
 
 def reniciar():
@@ -57,8 +59,6 @@ def tarefasExecutar():
         verificador= "True"
         tarefasExecutar()
 
-
-
     # gera o nome do arquivo com a data atual
     data_atual = datetime.datetime.now().strftime("%d-%m-%Y")
     nome_arquivo = f"tarefas do dia {data_atual}.txt"
@@ -87,10 +87,6 @@ def tarefasExecutar():
         print("     ")
         time.sleep(2)
         tarefasExecutar()
-
-
-
-
 
     lerArquivoMostrar()
 
