@@ -1,11 +1,22 @@
 import os
 import datetime
 import time
-import locale
+import requests
 
 global verificador
 verificador= "False"
 dias_da_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']
+
+# Previsão do tempo API OpenWeather
+cidade, api_key = 'Sua_Cidade,BR', 'sua_API'
+url = f'https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}&units=metric'
+response = requests.get(url)
+data = response.json()
+temperatura = data['main']['temp']
+tempo = data['weather'][0]['description']
+umidade = data['main']['humidity']
+PrevisaoTempo= f'Previsão do tempo para {cidade}: Temp: {data["main"]["temp"]}°C - Descrição: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}%'
+
 
 
 def reniciar():
@@ -17,6 +28,7 @@ def lerArquivoMostrar():
 
     # Limpa o terminal 
     os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+    print("     ")
     print("Digite s=sair ou d=modo discreto ou r=reiniciar")
     print("     ")
     
@@ -54,6 +66,7 @@ def tarefasExecutar():
     # verifica se o usuário informou "d" o programa para de mostrar informacoes do arquivo
     if tarefa == "d":
         os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        print(PrevisaoTempo)
         print("     ")
         print("modo discreto ativado")
         print("     ")
@@ -71,9 +84,17 @@ def tarefasExecutar():
     # verifica se o arquivo já existe, se não existir, cria um novo
     if not os.path.exists(nome_arquivo):
         with open(nome_arquivo, "w") as arquivo:
-            arquivo.write("ID\tData\tHora\tTarefa\n")
+            
+            with open(nome_arquivo, "r+") as arquivo:
+                conteudo_arquivo = arquivo.read()
+                arquivo.seek(0, 0) #cursor na primeira linha
+                arquivo.write(f"{PrevisaoTempo}\n{conteudo_arquivo}")
+                arquivo.seek(0, 1) #cursor na segunda linha
+                arquivo.write("\n") #Efeito de Enter
+                arquivo.write("ID\tData\tHora\tTarefa\n")
 
     # adiciona a nova tarefa ao final do arquivo
+
     id_tarefa = sum(1 for _ in open(nome_arquivo))  # conta o número de linhas para gerar o ID da nova tarefa
     hora_atual = datetime.datetime.now().strftime("%H:%M:%S")
     with open(nome_arquivo, "a") as arquivo:
@@ -87,6 +108,7 @@ def tarefasExecutar():
 
     if verificador == "True":
         os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        print(PrevisaoTempo)
         print("     ")
         print("modo discreto ativado")
         print("     ")
