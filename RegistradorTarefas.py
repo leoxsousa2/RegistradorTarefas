@@ -10,7 +10,7 @@ def tarefasExecutar():
     print("     ")
     
     # lê o arquivo de tarefas se existir e mostra no terminal
-    data_atual = datetime.datetime.now().strftime("%Y-%m-%d")
+    data_atual = datetime.datetime.now().strftime("%d-%m-%Y")
     nome_arquivo = f"tarefas do dia {data_atual}.txt"
     if os.path.exists(nome_arquivo):
         with open(nome_arquivo, "r") as arquivo:
@@ -27,7 +27,7 @@ def tarefasExecutar():
         exit()
 
     # gera o nome do arquivo com a data atual
-    data_atual = datetime.datetime.now().strftime("%Y-%m-%d")
+    data_atual = datetime.datetime.now().strftime("%d-%m-%Y")
     nome_arquivo = f"tarefas do dia {data_atual}.txt"
 
     # verifica se o arquivo já existe, se não existir, cria um novo
