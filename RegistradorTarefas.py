@@ -1,9 +1,11 @@
 import os
 import datetime
 import time
+import locale
 
 global verificador
 verificador= "False"
+dias_da_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']
 
 
 def reniciar():
@@ -19,8 +21,10 @@ def lerArquivoMostrar():
     print("     ")
     
     # lê o arquivo de tarefas se existir e mostra no terminal
-    data_atual = datetime.datetime.now().strftime("%d-%m-%Y")
-    nome_arquivo = f"tarefas do dia {data_atual}.txt"
+    data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
+    for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
+        data_atual = data_atual.replace(dia, dias_da_semana[i])
+    nome_arquivo = f"tarefas de {data_atual}.txt"
     if os.path.exists(nome_arquivo):
         with open(nome_arquivo, "r") as arquivo:
             conteudo = arquivo.read()
@@ -31,8 +35,7 @@ def lerArquivoMostrar():
 
 
 def tarefasExecutar():
-    # Limpa o terminal 
-    print("Digite s=sair ou d=modo discreto ou r=reiniciar")
+    
     print("     ")
 
     # pede para o usuário informar a tarefa
@@ -60,8 +63,10 @@ def tarefasExecutar():
         tarefasExecutar()
 
     # gera o nome do arquivo com a data atual
-    data_atual = datetime.datetime.now().strftime("%d-%m-%Y")
-    nome_arquivo = f"tarefas do dia {data_atual}.txt"
+    data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
+    for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
+        data_atual = data_atual.replace(dia, dias_da_semana[i])
+    nome_arquivo = f"tarefas de {data_atual}.txt"
 
     # verifica se o arquivo já existe, se não existir, cria um novo
     if not os.path.exists(nome_arquivo):
