@@ -113,7 +113,7 @@ def tarefasExecutar():
 
     # adiciona a nova tarefa ao final do arquivo
 
-    id_tarefa = sum(1 for _ in open(nome_arquivo))  # conta o número de linhas para gerar o ID da nova tarefa
+    id_tarefa = sum(1 for _ in open(nome_arquivo)) -2  # conta o número de linhas para gerar o ID da nova tarefa
     hora_atual = datetime.datetime.now().strftime("%H:%M:%S")
     with open(nome_arquivo, "a") as arquivo:
         arquivo.write(f"{id_tarefa}\t{data_atual}\t{hora_atual}\t{tarefa}\n")
