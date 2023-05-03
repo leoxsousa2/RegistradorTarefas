@@ -94,6 +94,12 @@ def tarefasExecutar():
         global verificador
         verificador= "True"
         tarefasExecutar()
+    
+    if tarefa == "telaDark":
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        tarefa2 = input()
+        if tarefa2 == "r":
+            reniciar()
 
     # gera o nome do arquivo com a data atual
     data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
