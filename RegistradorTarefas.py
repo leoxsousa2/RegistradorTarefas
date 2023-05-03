@@ -10,32 +10,34 @@ global verificador
 verificador= "False"
 dias_da_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']
 
-# Buscar credenciais - informacoes que nao podem estar no codigo principal
-with open('credenciaisAPI-OpenWeather.txt') as f:
-    conteudo = f.readlines()
-    cidade = conteudo[1].split(';')[0].strip()  #Ler segunda linha coluna 1 (separacao ";" )
-    api_key = conteudo[1].split(';')[1].strip() #Ler segunda linha coluna 2 (separacao ";" )
 
-# Verifica conectividade com a internet
-try:
-    requests.get('https://www.google.com/')
-    net=1
-except requests.exceptions.ConnectionError:
-    print('Erro: sem conexão com a internet')
-    net=0
-    
-if net == 1:
-    # Previsão do tempo API OpenWeather
-    url = f'https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}&units=metric'
-    response = requests.get(url)
-    data = response.json()
-    temperatura = data['main']['temp']
-    tempo = data['weather'][0]['description']
-    umidade = data['main']['humidity']
-    PrevisaoTempo= f'Previsão do tempo para {cidade}: Temp: {data["main"]["temp"]}°C - Descrição: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}%'
-if net == 0:
-    PrevisaoTempo='Erro: Não tempo como verificar a previsão do tempo. Sem conexão com a internet'
 
+def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTempo
+    # Buscar credenciais - informacoes que nao podem estar no codigo principal
+    with open('credenciaisAPI-OpenWeather.txt') as f:
+        conteudo = f.readlines()
+        cidade = conteudo[1].split(';')[0].strip()  #Ler segunda linha coluna 1 (separacao ";" )
+        api_key = conteudo[1].split(';')[1].strip() #Ler segunda linha coluna 2 (separacao ";" )
+    # Verifica conectividade com a internet
+    try:
+        requests.get('https://www.google.com/')
+        net=1
+    except requests.exceptions.ConnectionError:
+        print('Erro: sem conexão com a internet')
+        net=0
+        
+    if net == 1:
+        # Previsão do tempo API OpenWeather
+        url = f'https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}&units=metric'
+        response = requests.get(url)
+        data = response.json()
+        temperatura = data['main']['temp']
+        tempo = data['weather'][0]['description']
+        umidade = data['main']['humidity']
+        PrevisaoTempo= f'Previsão do tempo para {cidade}: Temp: {data["main"]["temp"]}°C - Descrição: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}%'
+    if net == 0:
+        PrevisaoTempo='Erro: Não tempo como verificar a previsão do tempo. Sem conexão com a internet'
+    return PrevisaoTempo
 
 def reniciar():
     global verificador
@@ -84,7 +86,7 @@ def tarefasExecutar():
     # verifica se o usuário informou "d" o programa para de mostrar informacoes do arquivo
     if tarefa == "d":
         os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-        print(PrevisaoTempo)
+        print(previsaoTempo())
         print("     ")
         print("modo discreto ativado")
         print("     ")
@@ -106,7 +108,7 @@ def tarefasExecutar():
             with open(nome_arquivo, "r+") as arquivo:
                 conteudo_arquivo = arquivo.read()
                 arquivo.seek(0, 0) #cursor na primeira linha
-                arquivo.write(f"{PrevisaoTempo}\n{conteudo_arquivo}")
+                arquivo.write(f"{previsaoTempo()}\n{conteudo_arquivo}")
                 arquivo.seek(0, 1) #cursor na segunda linha
                 arquivo.write("\n") #Efeito de Enter
                 arquivo.write("ID\tData\tHora\tTarefa\n")
@@ -134,5 +136,6 @@ def tarefasExecutar():
         tarefasExecutar()
 
     lerArquivoMostrar()
+
 
 lerArquivoMostrar() # Inicia a função 
