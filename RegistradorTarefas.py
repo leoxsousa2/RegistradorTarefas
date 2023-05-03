@@ -3,6 +3,11 @@ import datetime
 import time
 import requests
 import webbrowser
+import openai
+with open(r'C:\Users\Acer\OneDrive\Documentos\CredenciaisAPI\credenciaisAPI.txt') as f:
+    conteudo = f.readlines()
+    openai.api_key = conteudo[2].split(';')[1].strip() #Ler terceira linha coluna 2 (separacao ";" )
+#"C:\Users\Acer\OneDrive\Documentos\CredenciaisAPI\credenciaisAPI.txt"
 
 def perguntarTarefa():
     global tela   #pega a variavel que esta no inicio do codigo
@@ -59,6 +64,12 @@ def perguntarTarefa():
         url = 'https://chat.openai.com'
         webbrowser.open(url)
         reniciar()
+    if tarefa == "gptcmd":
+        openAIconfig()
+    if tarefa == "gptsaldo":
+        url = 'https://platform.openai.com/account/usage'
+        webbrowser.open(url)
+        reniciar()
     if tarefa == "abrirP":
         folder_path = r"C:\Users\Acer\OneDrive\Documentos\RegistradorTarefas"
         os.startfile(folder_path)
@@ -104,19 +115,12 @@ def stringNomeArquivo():
 
 def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTempo
     # Buscar credenciais - informacoes que nao podem estar no codigo principal
-    with open('credenciaisAPI-OpenWeather.txt') as f:
+    with open(r'C:\Users\Acer\OneDrive\Documentos\CredenciaisAPI\credenciaisAPI.txt') as f:
         conteudo = f.readlines()
         cidade = conteudo[1].split(';')[0].strip()  #Ler segunda linha coluna 1 (separacao ";" )
         api_key = conteudo[1].split(';')[1].strip() #Ler segunda linha coluna 2 (separacao ";" )
-    # Verifica conectividade com a internet
-    try:
-        requests.get('https://www.google.com/')
-        net=1
-    except requests.exceptions.ConnectionError:
-        print('Erro: sem conexao com a internet')
-        net=0
         
-    if net == 1:
+    if verificarInternet() == 1:
         hora_atual = datetime.datetime.now().strftime("%H:%M:%S")
         # Previsão do tempo API OpenWeather
         url = f'https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}&units=metric'
@@ -126,7 +130,7 @@ def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTem
         tempo = data['weather'][0]['description']
         umidade = data['main']['humidity']
         PrevisaoTempo= f'Previsao do tempo {cidade}: Temp: {data["main"]["temp"]}°C - Descricao: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}% - Update: {hora_atual}'
-    if net == 0:
+    if verificarInternet() == 0:
         PrevisaoTempo='Erro: Nao tempo como verificar a previsao do tempo. Sem conexao com a internet'
     return PrevisaoTempo
 
@@ -179,6 +183,77 @@ def atualizarPrevisaoTempoArquivo():
         arquivo.write(infoArquivo)
     perguntarTarefa()
  
+def verificarInternet():
+    # Verifica conectividade com a internet
+    try:
+        requests.get('https://www.google.com/')
+        net=1
+    except requests.exceptions.ConnectionError:
+        net=0
+    return net
+
+def openAIconfig():
+    os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+    if verificarInternet() == 0:
+        print("Erro: IA sem internet! ")
+        time.sleep(5)
+        reniciar()
+    if verificarInternet() == 1:
+        # Defina o modelo GPT que deseja usar
+        model_engine = "text-davinci-002"
+        user_input = "Converse comigo somente em português"
+        # Envie uma consulta para o modelo GPT
+        completions = openai.Completion.create(
+            engine=model_engine,
+            prompt=user_input,
+            max_tokens=1,
+            n=1,
+            stop=None,
+            temperature=0.5,
+        )
+        # Imprima a resposta do modelo GPT
+        message = completions.choices[0].text.strip()
+        #print(message)
+        openAI()
+    
+def openAI():
+    if verificarInternet() == 0:
+        print("Erro: IA sem internet! ")
+        time.sleep(5)
+        reniciar()
+    if verificarInternet() == 1:
+        # Defina o modelo GPT que deseja usar
+        model_engine = "text-davinci-002"
+        user_input = input(">>>> ")
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        if user_input == "s" or user_input == "r":
+            reniciar()
+        # Envie uma consulta para o modelo GPT
+        completions = openai.Completion.create(
+            engine=model_engine,
+            prompt=user_input,
+            max_tokens=200,
+            n=1,
+            stop=None,
+            temperature=0.5,
+        )
+
+        # Imprima a resposta do modelo GPT
+        message = completions.choices[0].text.strip()
+        print(user_input)
+        print(" ")
+        print(message)
+        print(" ")
+        print(" ")
+        time.sleep(5)
+        openAI()
+
+
+
+
+
+
+
 
 tela= "Cheia"
 perguntarTarefa() # Inicia a funcao 
