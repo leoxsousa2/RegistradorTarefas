@@ -113,6 +113,7 @@ def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTem
         net=0
         
     if net == 1:
+        hora_atual = datetime.datetime.now().strftime("%H:%M:%S")
         # Previsão do tempo API OpenWeather
         url = f'https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}&units=metric'
         response = requests.get(url)
@@ -120,7 +121,7 @@ def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTem
         temperatura = data['main']['temp']
         tempo = data['weather'][0]['description']
         umidade = data['main']['humidity']
-        PrevisaoTempo= f'Previsao do tempo para {cidade}: Temp: {data["main"]["temp"]}°C - Descricao: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}%'
+        PrevisaoTempo= f'Previsao do tempo {cidade}: Temp: {data["main"]["temp"]}°C - Descricao: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}% - Update: {hora_atual}'
     if net == 0:
         PrevisaoTempo='Erro: Nao tempo como verificar a previsao do tempo. Sem conexao com a internet'
     return PrevisaoTempo
