@@ -74,6 +74,10 @@ def perguntarTarefa():
         folder_path = r"C:\Users\Acer\OneDrive\Documentos\Simulacao-FOCAL"
         os.startfile(folder_path)
         reniciar()
+    if tarefa == "links":
+        url = 'https://leoxsousa2.github.io/website/dir/links.html'
+        webbrowser.open(url)
+        reniciar()
     tarefasExecutar()
 
 
