@@ -3,14 +3,90 @@ import datetime
 import time
 import requests
 
-global caminhoArquivo
-caminhoArquivo = r"C:\Users\Acer\OneDrive\Documentos\tarefas" #O resto será preechido por strings
-
-global verificador
-verificador= "False"
-dias_da_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']
 
 
+def perguntarTarefa():
+    global tela   #pega a variavel que está no inicio do codigo
+    global tarefa
+    os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+
+    if tela == "Cheia" or tela == "Discreto":
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        print("     ")
+        print("Digite s=sair//d=modo-discreto//r=reiniciar//dark=modoescuro//edit=editar-arquivoTXT//abriP=abrir-pasta-arquivo//utxt=atualizar-arquivoTXT")
+        print("     ")
+    if tela == "Cheia":
+        # lê o arquivo de tarefas se existir e mostra no terminal
+        if os.path.exists(stringNomeArquivo()):
+            with open(stringNomeArquivo(), "r") as arquivo:
+                conteudo = arquivo.read()
+            print(conteudo)
+            print("     ")
+            tarefa = input("Qual tarefa você vai realizar? ")  # pede para o usuário informar a tarefa
+    if tela == "Discretro":
+        print(previsaoTempo())
+        print("     ")
+        print("modo discreto ativado")
+        print("     ")
+        time.sleep(2)
+        print("     ")
+        tarefa = input("Qual tarefa você vai realizar? ")  # pede para o usuário informar a tarefa
+    if tela == "Dark":
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        print("     ")
+        tarefa = input()  # pede para o usuário informar a tarefa
+
+
+    if tarefa == "r":
+        reniciar()
+    # verifica se o usuário informou "s" e encerra o programa se for o caso
+    if tarefa == "s":
+        print("Programa encerrado.")
+        time.sleep(2)
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        exit()
+    # verifica se o usuário informou "d" o programa para de mostrar informacoes do arquivo
+    if tarefa == "d":
+        tela= "Discretro"
+        perguntarTarefa()
+    if tarefa == "dark":
+        tela= "Dark"
+        perguntarTarefa()
+    if tarefa == "edit":
+        print(stringNomeArquivo())
+        os.system("notepad.exe {}".format(stringNomeArquivo()))
+        reniciar()
+    if tarefa == "abrirP":
+        folder_path = r"C:\Users\Acer\OneDrive\Documentos\RegistradorTarefas"
+        os.startfile(folder_path)
+        reniciar()
+    if tarefa == "utxt":
+        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
+        atualizarPrevisaoTempoArquivo()
+
+    tarefasExecutar()
+
+
+
+
+
+
+def reniciar():
+    global tela
+    tela= "Cheia"
+    perguntarTarefa()
+
+def stringDataAtual(): 
+    dias_da_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']
+    data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y") 
+    for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
+        data_atual = data_atual.replace(dia, dias_da_semana[i])
+    return data_atual   
+
+def stringNomeArquivo():
+    caminhoArquivo = r"C:\Users\Acer\OneDrive\Documentos\tarefas" #O resto será preechido por strings
+    nome_arquivo = caminhoArquivo + " de " + stringDataAtual() + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
+    return nome_arquivo
 
 def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTempo
     # Buscar credenciais - informacoes que nao podem estar no codigo principal
@@ -39,92 +115,17 @@ def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTem
         PrevisaoTempo='Erro: Não tempo como verificar a previsão do tempo. Sem conexão com a internet'
     return PrevisaoTempo
 
-def reniciar():
-    global verificador
-    verificador= "False"
-    lerArquivoMostrar()
 
-def lerArquivoMostrar():
 
-    # Limpa o terminal 
-    os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-    print("     ")
-    print("Digite s=sair ou d=modo discreto ou r=reiniciar")
-    print("     ")
-    
-    # lê o arquivo de tarefas se existir e mostra no terminal
-    data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
-    for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
-        data_atual = data_atual.replace(dia, dias_da_semana[i])
-    nome_arquivo = caminhoArquivo + " de " + data_atual + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
-    if os.path.exists(nome_arquivo):
-        with open(nome_arquivo, "r") as arquivo:
-            conteudo = arquivo.read()
-        print(conteudo)
-    
-    tarefasExecutar()
+
 
 
 
 def tarefasExecutar():
-    
-    print("     ")
-
-    # pede para o usuário informar a tarefa
-    tarefa = input("Qual tarefa você vai realizar? ")
-
-    if tarefa == "r":
-        reniciar()
-
-    # verifica se o usuário informou "s" e encerra o programa se for o caso
-    if tarefa == "s":
-        print("Programa encerrado.")
-        time.sleep(2)
-        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-        exit()
-
-    # verifica se o usuário informou "d" o programa para de mostrar informacoes do arquivo
-    if tarefa == "d":
-        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-        print(previsaoTempo())
-        print("     ")
-        print("modo discreto ativado")
-        print("     ")
-        time.sleep(2)
-        global verificador
-        verificador= "True"
-        tarefasExecutar()
-    
-    if tarefa == "telaDark":
-        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-        tarefa2 = input()
-        if tarefa2 == "r":
-            reniciar()
-
-    if tarefa == "editArq":
-        data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
-        for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
-            data_atual = data_atual.replace(dia, dias_da_semana[i])
-        nome_arquivo = caminhoArquivo + " de " + data_atual + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
-        os.system("notepad.exe {}".format(nome_arquivo))
-        reniciar()
-
-    if tarefa == "abrirPasta":
-        folder_path = r"C:\Users\Acer\OneDrive\Documentos\RegistradorTarefas"
-        os.startfile(folder_path)
-        reniciar()
-
-    # gera o nome do arquivo com a data atual
-    data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
-    for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
-        data_atual = data_atual.replace(dia, dias_da_semana[i])
-    nome_arquivo = caminhoArquivo + " de " + data_atual + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
-
     # verifica se o arquivo já existe, se não existir, cria um novo
-    if not os.path.exists(nome_arquivo):
-        with open(nome_arquivo, "w") as arquivo:
-            
-            with open(nome_arquivo, "r+") as arquivo:
+    if not os.path.exists(stringNomeArquivo()):
+        with open(stringNomeArquivo(), "w") as arquivo:
+            with open(stringNomeArquivo(), "r+") as arquivo:
                 conteudo_arquivo = arquivo.read()
                 arquivo.seek(0, 0) #cursor na primeira linha
                 arquivo.write(f"{previsaoTempo()}\n{conteudo_arquivo}")
@@ -133,28 +134,36 @@ def tarefasExecutar():
                 arquivo.write("ID\tData\tHora\tTarefa\n")
 
     # adiciona a nova tarefa ao final do arquivo
-
-    id_tarefa = sum(1 for _ in open(nome_arquivo)) -2  # conta o número de linhas para gerar o ID da nova tarefa
+    id_tarefa = sum(1 for _ in open(stringNomeArquivo())) -2  # conta o número de linhas para gerar o ID da nova tarefa
     hora_atual = datetime.datetime.now().strftime("%H:%M:%S")
-    with open(nome_arquivo, "a") as arquivo:
-        arquivo.write(f"{id_tarefa}\t{data_atual}\t{hora_atual}\t{tarefa}\n")
+    with open(stringNomeArquivo(), "a") as arquivo:
+        arquivo.write(f"{id_tarefa}\t{stringDataAtual()}\t{hora_atual}\t{tarefa}\n")
 
     print("     ")
-    print(f"Tarefa registrada com sucesso no arquivo {nome_arquivo}!")
+    print(f"Tarefa registrada com sucesso no arquivo {stringNomeArquivo()}!")
     print("     ")
     time.sleep(5)
 
+    perguntarTarefa() # Inicia a função 
 
-    if verificador == "True":
-        os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
-        print(PrevisaoTempo)
-        print("     ")
-        print("modo discreto ativado")
-        print("     ")
-        time.sleep(2)
-        tarefasExecutar()
+def atualizarPrevisaoTempoArquivo():
+    with open(stringNomeArquivo(), 'r') as infoArquivo:
+        linhas = infoArquivo.readlines()
+        infoArquivo = ''.join(linhas[3:])
 
-    lerArquivoMostrar()
+        with open(stringNomeArquivo(), "w") as arquivo:
+            with open(stringNomeArquivo(), "r+") as arquivo:
+                conteudo_arquivo = arquivo.read()
+                arquivo.seek(0, 0) #cursor na primeira linha
+                arquivo.write(f"{previsaoTempo()}\n{conteudo_arquivo}")
+                arquivo.seek(0, 1) #cursor na segunda linha
+                arquivo.write("\n") #Efeito de Enter
+                arquivo.write("ID\tData\tHora\tTarefa\n")
 
+    with open(stringNomeArquivo(), "a") as arquivo:
+        arquivo.write(infoArquivo)
+    perguntarTarefa()
+ 
 
-lerArquivoMostrar() # Inicia a função 
+tela= "Cheia"
+perguntarTarefa() # Inicia a função 
