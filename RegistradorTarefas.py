@@ -12,7 +12,7 @@ def perguntarTarefa():
     if tela == "Cheia" or tela == "Discreto":
         os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
         print("     ")
-        print("Digite s=sair//d=modo-discreto//r=reiniciar//dark=modoescuro//edit=editar-arquivoTXT//abriP=abrir-pasta-arquivo//utxt=atualizar-arquivoTXT")
+        print("Digite s=sair//d=modo-discreto//r=reiniciar//dark=modoescuro//edit=editar-arquivoTXT//abriP=abrir-pasta-arquivo//utxt=atualizar-arquivoTXT//abrirPtese//abrirPsimu")
         print("     ")
     if tela == "Cheia":
         # lê o arquivo de tarefas se existir e mostra no terminal
@@ -21,7 +21,7 @@ def perguntarTarefa():
                 conteudo = arquivo.read()
             print(conteudo)
             print("     ")
-            tarefa = input("Qual tarefa voce vai realizar? ")  # pede para o usuario informar a tarefa
+        tarefa = input("Qual tarefa voce vai realizar? ")  # pede para o usuario informar a tarefa
     if tela == "Discretro":
         print(previsaoTempo())
         print("     ")
