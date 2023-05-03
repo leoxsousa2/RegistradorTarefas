@@ -101,6 +101,19 @@ def tarefasExecutar():
         if tarefa2 == "r":
             reniciar()
 
+    if tarefa == "editArq":
+        data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
+        for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
+            data_atual = data_atual.replace(dia, dias_da_semana[i])
+        nome_arquivo = caminhoArquivo + " de " + data_atual + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
+        os.system("notepad.exe {}".format(nome_arquivo))
+        reniciar()
+
+    if tarefa == "abrirPasta":
+        folder_path = r"C:\Users\Acer\OneDrive\Documentos\RegistradorTarefas"
+        os.startfile(folder_path)
+        reniciar()
+
     # gera o nome do arquivo com a data atual
     data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y")
     for i, dia in enumerate(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']):
