@@ -2,11 +2,10 @@ import os
 import datetime
 import time
 import requests
-
-
+import webbrowser
 
 def perguntarTarefa():
-    global tela   #pega a variavel que está no inicio do codigo
+    global tela   #pega a variavel que esta no inicio do codigo
     global tarefa
     os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
 
@@ -22,7 +21,7 @@ def perguntarTarefa():
                 conteudo = arquivo.read()
             print(conteudo)
             print("     ")
-            tarefa = input("Qual tarefa você vai realizar? ")  # pede para o usuário informar a tarefa
+            tarefa = input("Qual tarefa voce vai realizar? ")  # pede para o usuario informar a tarefa
     if tela == "Discretro":
         print(previsaoTempo())
         print("     ")
@@ -30,22 +29,22 @@ def perguntarTarefa():
         print("     ")
         time.sleep(2)
         print("     ")
-        tarefa = input("Qual tarefa você vai realizar? ")  # pede para o usuário informar a tarefa
+        tarefa = input("Qual tarefa voce vai realizar? ")  # pede para o usuario informar a tarefa
     if tela == "Dark":
         os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
         print("     ")
-        tarefa = input()  # pede para o usuário informar a tarefa
+        tarefa = input()  # pede para o usuario informar a tarefa
 
 
     if tarefa == "r":
         reniciar()
-    # verifica se o usuário informou "s" e encerra o programa se for o caso
+    # verifica se o usuario informou "s" e encerra o programa se for o caso
     if tarefa == "s":
         print("Programa encerrado.")
         time.sleep(2)
         os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
         exit()
-    # verifica se o usuário informou "d" o programa para de mostrar informacoes do arquivo
+    # verifica se o usuario informou "d" o programa para de mostrar informacoes do arquivo
     if tarefa == "d":
         tela= "Discretro"
         perguntarTarefa()
@@ -56,6 +55,10 @@ def perguntarTarefa():
         print(stringNomeArquivo())
         os.system("notepad.exe {}".format(stringNomeArquivo()))
         reniciar()
+    if tarefa == "gpt":
+        url = 'https://chat.openai.com'
+        webbrowser.open(url)
+        reniciar()
     if tarefa == "abrirP":
         folder_path = r"C:\Users\Acer\OneDrive\Documentos\RegistradorTarefas"
         os.startfile(folder_path)
@@ -63,7 +66,14 @@ def perguntarTarefa():
     if tarefa == "utxt":
         os.system('cls' if os.name == 'nt' else 'clear')  # limpa a tela do terminal
         atualizarPrevisaoTempoArquivo()
-
+    if tarefa == "abrirPtese":
+        folder_path = r"C:\Users\Acer\Dropbox\Leo\3 - Dr-Pesquisa-WaterPhanton3D\0-Tese"
+        os.startfile(folder_path)
+        reniciar()
+    if tarefa == "abrirPsimu":
+        folder_path = r"C:\Users\Acer\OneDrive\Documentos\Simulacao-FOCAL"
+        os.startfile(folder_path)
+        reniciar()
     tarefasExecutar()
 
 
@@ -84,7 +94,7 @@ def stringDataAtual():
     return data_atual   
 
 def stringNomeArquivo():
-    caminhoArquivo = r"C:\Users\Acer\OneDrive\Documentos\tarefas" #O resto será preechido por strings
+    caminhoArquivo = r"C:\Users\Acer\OneDrive\Documentos\tarefas" #O resto sera preechido por strings
     nome_arquivo = caminhoArquivo + " de " + stringDataAtual() + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
     return nome_arquivo
 
@@ -99,7 +109,7 @@ def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTem
         requests.get('https://www.google.com/')
         net=1
     except requests.exceptions.ConnectionError:
-        print('Erro: sem conexão com a internet')
+        print('Erro: sem conexao com a internet')
         net=0
         
     if net == 1:
@@ -110,9 +120,9 @@ def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTem
         temperatura = data['main']['temp']
         tempo = data['weather'][0]['description']
         umidade = data['main']['humidity']
-        PrevisaoTempo= f'Previsão do tempo para {cidade}: Temp: {data["main"]["temp"]}°C - Descrição: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}%'
+        PrevisaoTempo= f'Previsao do tempo para {cidade}: Temp: {data["main"]["temp"]}°C - Descricao: {data["weather"][0]["description"]} - Humidade: {data["main"]["humidity"]}%'
     if net == 0:
-        PrevisaoTempo='Erro: Não tempo como verificar a previsão do tempo. Sem conexão com a internet'
+        PrevisaoTempo='Erro: Nao tempo como verificar a previsao do tempo. Sem conexao com a internet'
     return PrevisaoTempo
 
 
@@ -122,7 +132,7 @@ def previsaoTempo(): #Quando chamar esse def o retorno sera a string PrevisaoTem
 
 
 def tarefasExecutar():
-    # verifica se o arquivo já existe, se não existir, cria um novo
+    # verifica se o arquivo ja existe, se nao existir, cria um novo
     if not os.path.exists(stringNomeArquivo()):
         with open(stringNomeArquivo(), "w") as arquivo:
             with open(stringNomeArquivo(), "r+") as arquivo:
@@ -134,7 +144,7 @@ def tarefasExecutar():
                 arquivo.write("ID\tData\tHora\tTarefa\n")
 
     # adiciona a nova tarefa ao final do arquivo
-    id_tarefa = sum(1 for _ in open(stringNomeArquivo())) -2  # conta o número de linhas para gerar o ID da nova tarefa
+    id_tarefa = sum(1 for _ in open(stringNomeArquivo())) -2  # conta o numero de linhas para gerar o ID da nova tarefa
     hora_atual = datetime.datetime.now().strftime("%H:%M:%S")
     with open(stringNomeArquivo(), "a") as arquivo:
         arquivo.write(f"{id_tarefa}\t{stringDataAtual()}\t{hora_atual}\t{tarefa}\n")
@@ -144,7 +154,7 @@ def tarefasExecutar():
     print("     ")
     time.sleep(5)
 
-    perguntarTarefa() # Inicia a função 
+    perguntarTarefa() # Inicia a funcao 
 
 def atualizarPrevisaoTempoArquivo():
     with open(stringNomeArquivo(), 'r') as infoArquivo:
@@ -166,4 +176,4 @@ def atualizarPrevisaoTempoArquivo():
  
 
 tela= "Cheia"
-perguntarTarefa() # Inicia a função 
+perguntarTarefa() # Inicia a funcao 
