@@ -183,7 +183,7 @@ def voz():
     engine.runAndWait()
     engine.say(message)
     engine.runAndWait()   # Aguarde até que a fala seja concluída
-    if IA  == 1:
+    if VOZ  == 1:
         openAI()
 def openAIconfig():
     os.system('cls' if os.name == 'nt' else 'clear')               # limpa a tela do terminal
@@ -196,14 +196,14 @@ def openAIconfig():
             conteudo = f.readlines()
             openai.api_key = conteudo[2].split(';')[1].strip()     #Ler terceira linha coluna 2 (separacao ";" )
         model_engine = "text-davinci-002"                          # Defina o modelo GPT que deseja usar
-        user_input = "Converse comigo somente em português"
+        user_input = "Você é um assistente educado e prestativo. Converse comigo somente em português"
         completions = openai.Completion.create(engine=model_engine, prompt=user_input, max_tokens=1, n=1, stop=None, temperature=0.5, )  # Envie uma consulta para o modelo GPT
         message = completions.choices[0].text.strip()
         openAI()
     
 def openAI():
     global message
-    global IA
+    global VOZ
     global user_input
     if verificarInternet() == 0:
         print("Erro: IA sem internet! ")
@@ -217,7 +217,17 @@ def openAI():
         user_input = input(">>>> ")
         os.system('cls' if os.name == 'nt' else 'clear')             # limpa a tela do terminal
         if user_input == "s" or user_input == "r":
-            reniciar()      
+            reniciar()
+        if user_input == "voz-on":
+            VOZ = 1
+            print("Modo voz ativado")
+            time.sleep(5)
+            openAI()
+        if user_input == "voz-off":
+            VOZ = 0
+            print("Modo voz desativado")
+            time.sleep(5)
+            openAI()
         completions = openai.Completion.create( engine=model_engine, prompt=user_input, max_tokens=200, n=1, stop=None, temperature=0.5, )  # Envie uma consulta para o modelo GPT
         message = completions.choices[0].text.strip()               # Imprima a resposta do modelo GPT
         print(user_input)
@@ -225,12 +235,11 @@ def openAI():
         print(message)
         print(" ")
         print(" ")
-        #time.sleep(5)
-        IA = 1
-        voz()
+        if VOZ == 1:
+            voz()
         openAI()
 
 # --------------------------------------------->>> Depois de ler todo o codigo o programa executa o primeiro Def e determina uma variavel
-
+VOZ = 0
 tela= "Cheia"
 perguntarTarefa()                                                   # Inicia a funcao 
