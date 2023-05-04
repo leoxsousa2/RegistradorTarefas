@@ -3,7 +3,8 @@ import datetime
 import time
 import requests
 import webbrowser
-import openai
+import openai    # pip install  openai       #chatGPT
+import pyttsx3   # pip install  pyttsx3      #Usa a voz do windows
 
 caminhoCredenciais= r'C:\Users\Acer\OneDrive\Documentos\CredenciaisAPI\credenciaisAPI.txt'
 caminhoArquivoSaida= r"C:\Users\Acer\OneDrive\Documentos\tarefas" #O resto sera preechido por strings
@@ -86,6 +87,7 @@ def perguntarTarefa():
 
 # --------------------------------------------->>> Def com retornos de strings
 
+
 def stringDataAtual(): 
     dias_da_semana = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']
     data_atual = datetime.datetime.now().strftime("%a %d-%m-%Y") 
@@ -165,7 +167,24 @@ def atualizarPrevisaoTempoArquivo():
     with open(stringNomeArquivo(), "a") as arquivo:
         arquivo.write(infoArquivo)
     perguntarTarefa()
- 
+
+def voz():
+    engine = pyttsx3.init()   # Inicialize o objeto da biblioteca pyttsx3
+    engine.setProperty('rate', 200)  # Defina a taxa de fala (opcional)
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[0].id) # 10 é o índice da voz em português no meu computador
+    # Texto a ser lido em português
+    texto = "Você escreveu. " + user_input
+    texto2 = "Resposta I. A."
+    engine.say(texto)
+    engine.runAndWait()
+    time.sleep(1)
+    engine.say(texto2)
+    engine.runAndWait()
+    engine.say(message)
+    engine.runAndWait()   # Aguarde até que a fala seja concluída
+    if IA  == 1:
+        openAI()
 def openAIconfig():
     os.system('cls' if os.name == 'nt' else 'clear')               # limpa a tela do terminal
     if verificarInternet() == 0:
@@ -183,6 +202,9 @@ def openAIconfig():
         openAI()
     
 def openAI():
+    global message
+    global IA
+    global user_input
     if verificarInternet() == 0:
         print("Erro: IA sem internet! ")
         time.sleep(5)
@@ -203,7 +225,9 @@ def openAI():
         print(message)
         print(" ")
         print(" ")
-        time.sleep(5)
+        #time.sleep(5)
+        IA = 1
+        voz()
         openAI()
 
 # --------------------------------------------->>> Depois de ler todo o codigo o programa executa o primeiro Def e determina uma variavel
