@@ -199,6 +199,7 @@ def openAIconfig():
         user_input = "Você é um assistente educado e prestativo. Converse comigo somente em português"
         completions = openai.Completion.create(engine=model_engine, prompt=user_input, max_tokens=1, n=1, stop=None, temperature=0.5, )  # Envie uma consulta para o modelo GPT
         message = completions.choices[0].text.strip()
+        os.system('cls' if os.name == 'nt' else 'clear')             # limpa a tela do terminal
         openAI()
     
 def openAI():
@@ -215,22 +216,26 @@ def openAI():
             openai.api_key = conteudo[2].split(';')[1].strip()       #Ler terceira linha coluna 2 (separacao ";" )
         model_engine = "text-davinci-002"                            # Defina o modelo GPT que deseja usar
         user_input = input(">>>> ")
-        os.system('cls' if os.name == 'nt' else 'clear')             # limpa a tela do terminal
+        if user_input == "cls":    
+            os.system('cls' if os.name == 'nt' else 'clear')             # limpa a tela do terminal
+            openAI()
         if user_input == "s" or user_input == "r":
             reniciar()
         if user_input == "voz-on":
             VOZ = 1
             print("Modo voz ativado")
+            print(" ")
             time.sleep(5)
             openAI()
         if user_input == "voz-off":
             VOZ = 0
             print("Modo voz desativado")
+            print(" ")
             time.sleep(5)
-            openAI()
-        completions = openai.Completion.create( engine=model_engine, prompt=user_input, max_tokens=200, n=1, stop=None, temperature=0.5, )  # Envie uma consulta para o modelo GPT
+            openAI()                                                                  # max_tokens=200 para economizar
+        completions = openai.Completion.create( engine=model_engine, prompt=user_input, max_tokens=2000, n=1, stop=None, temperature=0.5, )  # Envie uma consulta para o modelo GPT
         message = completions.choices[0].text.strip()               # Imprima a resposta do modelo GPT
-        print(user_input)
+        #print(user_input)
         print(" ")
         print(message)
         print(" ")
