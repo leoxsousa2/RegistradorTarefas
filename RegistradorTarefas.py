@@ -6,8 +6,8 @@ import webbrowser
 import openai    # pip install  openai       #chatGPT
 import pyttsx3   # pip install  pyttsx3      #Usa a voz do windows
 
-caminhoCredenciais= r'C:\Users\Acer\OneDrive\Documentos\CredenciaisAPI\credenciaisAPI.txt'
-caminhoArquivoSaida= r"C:\Users\Acer\OneDrive\Documentos\tarefas" #O resto sera preechido por strings
+caminhoCredenciais= r'APIs\credenciaisAPI.txt'
+caminhoArquivoSaida= r"Caderno\tarefas" #O resto sera preechido por strings
 
 def perguntarTarefa():
     global tela                                                         #pega a variavel que esta no inicio do codigo
@@ -65,7 +65,7 @@ def perguntarTarefa():
         webbrowser.open(url)
         reniciar()
     if tarefa == "abrirP":
-        folder_path = r"C:\Users\Acer\OneDrive\Documentos\RegistradorTarefas"
+        folder_path = os.path.abspath(os.path.dirname(__file__))       #Este codigo informa o caminho em que o arquivo.py está 
         os.startfile(folder_path)
         reniciar()
     if tarefa == "utxt":
@@ -248,3 +248,10 @@ def openAI():
 VOZ = 0
 tela= "Cheia"
 perguntarTarefa()                                                   # Inicia a funcao 
+
+
+
+
+# Converter arquivo python para programa .exe ((abra o cmd e coloque este codigo))
+# pyinstaller RegistradorTarefas.py --onefile --noconsole
+# pyinstaller RegistradorTarefas.py --onefile
