@@ -30,16 +30,21 @@ def perguntarTarefa():
         print("     ")
         print("modo discreto ativado")
         print("     ")
-        time.sleep(2)
+        #time.sleep(2)
         print("     ")
         tarefa = input("Qual tarefa voce vai realizar? ")               # pede para o usuario informar a tarefa
     if tela == "Dark":
         os.system('cls' if os.name == 'nt' else 'clear')                # limpa a tela do terminal
         print("     ")
         tarefa = input()                                                # pede para o usuario informar a tarefa
+
+    if tarefa == "c":
+        tela = "Cheia"
+        perguntarTarefa()
     if tarefa == "r":
         reniciar()
     if tarefa == "s":
+        print("     ")
         print("Programa encerrado.")
         time.sleep(2)
         os.system('cls' if os.name == 'nt' else 'clear')                # limpa a tela do terminal
@@ -71,6 +76,8 @@ def perguntarTarefa():
     if tarefa == "utxt":
         os.system('cls' if os.name == 'nt' else 'clear')                # limpa a tela do terminal
         atualizarPrevisaoTempoArquivo()
+    if tarefa == "upy":
+        os.system("RegistradorTarefas.py")
     if tarefa == "abrirPtese":
         folder_path = r"C:\Users\Acer\Dropbox\Leo\3 - Dr-Pesquisa-WaterPhanton3D\0-Tese"
         os.startfile(folder_path)
@@ -128,8 +135,6 @@ def verificarInternet():                                            # Verifica c
 # --------------------------------------------->>> Def que somente executam funcções e depois retornam para o input
 
 def reniciar():
-    global tela
-    tela= "Cheia"
     perguntarTarefa()
 
 def tarefasExecutar():
