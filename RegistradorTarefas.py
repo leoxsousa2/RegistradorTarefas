@@ -59,6 +59,9 @@ def perguntarTarefa():
         print(stringNomeArquivo())
         os.system("notepad.exe {}".format(stringNomeArquivo()))
         reniciar()
+    if tarefa == "notas":
+        os.startfile('notepad.exe')
+        reniciar()
     if tarefa == "gpt":
         url = 'https://chat.openai.com'
         webbrowser.open(url)
