@@ -66,6 +66,10 @@ def perguntarTarefa():
         url = 'https://chat.openai.com'
         webbrowser.open(url)
         reniciar()
+    if tarefa == "gpt2":
+        url = 'https://chat.lmsys.org/'
+        webbrowser.open(url)
+        reniciar()
     if tarefa == "gptcmd":
         openAIconfig()
     if tarefa == "gptsaldo":
