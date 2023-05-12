@@ -1,0 +1,3 @@
+(cidade)		;	(API_OpenWeather)
+Aracaju,BR		;	coloque_aqui_API_OPenWeather
+			;	coloque_aqui_API_OPenAI

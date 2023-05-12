@@ -13,22 +13,22 @@ from sys import platform as _platform
 
 
 if _platform == "linux" or _platform == "linux2":
-    caminhoCredenciais= 'APIs/credenciaisAPI.txt'
+    caminhoCredenciais= 'APIs/credenciaisAPI.md'
     caminhoArquivoSaida= 'Caderno//' #O resto sera preechido por strings
 elif _platform == "win32" or _platform == "win64":
-    caminhoCredenciais= fr'APIs\credenciaisAPI.txt'
+    caminhoCredenciais= fr'APIs\credenciaisAPI.md'
     caminhoArquivoSaida = fr'Caderno\\'  #duas barra representa uma. Se colocar so uma da erro
 
 
 
 def ControleIDD():
-    with open('APIs/Registro.txt') as f:   
+    with open('APIs/Registro.md') as f:   
         conteudo = f.readlines()
         idd = int(conteudo[0].split(';')[0].strip())  
     return idd
 
 def stringNomeArquivo():
-    nome_arquivo = caminhoArquivoSaida + str(ControleIDD()) + '-tarefas' + " de " + stringDataAtual() + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
+    nome_arquivo = caminhoArquivoSaida + str(ControleIDD()) + '-tarefas' + " de " + stringDataAtual() + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.md
     return nome_arquivo
 
 
@@ -39,7 +39,7 @@ def perguntarTarefa():
     if tela == "Cheia" or tela == "Discreto":
         os.system('cls' if os.name == 'nt' else 'clear')                # limpa a tela do terminal
         print("     ")
-        print("Digite s=sair//d=modo-discreto//r=reiniciar//dark=modoescuro//edit=editar-arquivoTXT//abriP=abrir-pasta-arquivo//utxt=atualizar-arquivoTXT//abrirPtese//abrirPsimu")
+        print("Digite s=sair//d=modo-discreto//r=reiniciar//dark=modoescuro//edit=editar-arquivomd//abriP=abrir-pasta-arquivo//umd=atualizar-arquivomd//abrirPtese//abrirPsimu")
         print("     ")
     if tela == "Cheia":
         if os.path.exists(stringNomeArquivo()):
@@ -103,7 +103,7 @@ def perguntarTarefa():
         folder_path = os.path.abspath(os.path.dirname(__file__))       #Este codigo informa o caminho em que o arquivo.py está 
         os.startfile(folder_path)
         reniciar()
-    if tarefa == "utxt":
+    if tarefa == "umd":
         os.system('cls' if os.name == 'nt' else 'clear')                # limpa a tela do terminal
         atualizarPrevisaoTempoArquivo()
     if tarefa == "upy":
@@ -174,7 +174,7 @@ def reniciar():
 def tarefasExecutar():
     if not os.path.exists(stringNomeArquivo()):                    # verifica se o arquivo ja existe, se nao existir, cria um novo
         idd = ControleIDD() + 1
-        with open('APIs/Registro.txt', "w", encoding="latin-1") as arq:
+        with open('APIs/Registro.md', "w", encoding="latin-1") as arq:
             arq.write(str(idd) + "\n")
         with open(stringNomeArquivo(), "w", encoding="latin-1") as arquivo:
             with open(stringNomeArquivo(), "r+", encoding="latin-1") as arquivo:
