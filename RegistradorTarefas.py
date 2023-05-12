@@ -5,9 +5,32 @@ import requests
 import webbrowser
 import openai    # pip install  openai       #chatGPT
 import pyttsx3   # pip install  pyttsx3      #Usa a voz do windows
+import platform
+import json
+from time import strftime
+from sys import platform as _platform
 
-caminhoCredenciais= r'APIs\credenciaisAPI.txt'
-caminhoArquivoSaida= r"Caderno\tarefas" #O resto sera preechido por strings
+
+
+if _platform == "linux" or _platform == "linux2":
+    caminhoCredenciais= 'APIs/credenciaisAPI.txt'
+    caminhoArquivoSaida= 'Caderno//' #O resto sera preechido por strings
+elif _platform == "win32" or _platform == "win64":
+    caminhoCredenciais= fr'APIs\credenciaisAPI.txt'
+    caminhoArquivoSaida = fr'Caderno\\'  #duas barra representa uma. Se colocar so uma da erro
+
+
+
+def ControleIDD():
+    with open('APIs/Registro.txt') as f:   
+        conteudo = f.readlines()
+        idd = int(conteudo[0].split(';')[0].strip())  
+    return idd
+
+def stringNomeArquivo():
+    nome_arquivo = caminhoArquivoSaida + str(ControleIDD()) + '-tarefas' + " de " + stringDataAtual() + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
+    return nome_arquivo
+
 
 def perguntarTarefa():
     global tela                                                         #pega a variavel que esta no inicio do codigo
@@ -20,12 +43,12 @@ def perguntarTarefa():
         print("     ")
     if tela == "Cheia":
         if os.path.exists(stringNomeArquivo()):
-            with open(stringNomeArquivo(), "r") as arquivo:
+            with open(stringNomeArquivo(), "r", encoding="latin-1") as arquivo:
                 conteudo = arquivo.read()
             print(conteudo)
             print("     ")
         tarefa = input("Qual tarefa voce vai realizar? ")               # pede para o usuario informar a tarefa
-    if tela == "Discretro":
+    if tela == "Discreto":
         print(previsaoTempo())
         print("     ")
         print("modo discreto ativado")
@@ -50,9 +73,9 @@ def perguntarTarefa():
         os.system('cls' if os.name == 'nt' else 'clear')                # limpa a tela do terminal
         exit()
     if tarefa == "d":
-        tela= "Discretro"
+        tela= "Discreto"
         perguntarTarefa()
-    if tarefa == "dark":
+    if tarefa == "dk":
         tela= "Dark"
         perguntarTarefa()
     if tarefa == "edit":
@@ -94,7 +117,7 @@ def perguntarTarefa():
         os.startfile(folder_path)
         reniciar()
     if tarefa == "links":
-        url = 'https://leoxsousa2.github.io/website/dir/links.html'
+        url = 'http://168.75.85.136/dir/links.html'
         webbrowser.open(url)
         reniciar()
     tarefasExecutar()
@@ -109,17 +132,21 @@ def stringDataAtual():
         data_atual = data_atual.replace(dia, dias_da_semana[i])
     return data_atual   
 
-def stringNomeArquivo():
-    nome_arquivo = caminhoArquivoSaida + " de " + stringDataAtual() + ".txt"    #Ex: C:\Users\Acer\OneDrive\Documentos\tarefas de Dom 23-04-2023.txt
-    return nome_arquivo
+def stringHoraAtual():
+    #GetAPI = json.loads(requests.request("GET", 'https://timeapi.io/api/Time/current/zone?timeZone=America/Recife').text)
+    #HoraMinuto = GetAPI['time']
+    #Seg = GetAPI['seconds']
+    #hora_atual = (str(HoraMinuto) + ':' + str(Seg))
+    hora_atual = datetime.datetime.now().strftime("%H:%M:%S")
+    return hora_atual
 
 def previsaoTempo():                                                #Quando chamar esse def o retorno sera a string PrevisaoTempo # Previsão do tempo API OpenWeather
-    with open(caminhoCredenciais) as f:                             # Buscar credenciais - informacoes que nao podem estar no codigo principal
+    with open(caminhoCredenciais, encoding="latin-1") as f:                             # Buscar credenciais - informacoes que nao podem estar no codigo principal
         conteudo = f.readlines()
         cidade = conteudo[1].split(';')[0].strip()                  #Ler segunda linha coluna 1 (separacao ";" )
         api_key = conteudo[1].split(';')[1].strip()                 #Ler segunda linha coluna 2 (separacao ";" )
     if verificarInternet() == 1:
-        hora_atual = datetime.datetime.now().strftime("%H:%M:%S")
+        hora_atual = stringHoraAtual()
         url = f'https://api.openweathermap.org/data/2.5/weather?q={cidade}&appid={api_key}&units=metric'
         response = requests.get(url)
         data = response.json()
@@ -146,18 +173,20 @@ def reniciar():
 
 def tarefasExecutar():
     if not os.path.exists(stringNomeArquivo()):                    # verifica se o arquivo ja existe, se nao existir, cria um novo
-        with open(stringNomeArquivo(), "w") as arquivo:
-            with open(stringNomeArquivo(), "r+") as arquivo:
+        idd = ControleIDD() + 1
+        with open('APIs/Registro.txt', "w", encoding="latin-1") as arq:
+            arq.write(str(idd) + "\n")
+        with open(stringNomeArquivo(), "w", encoding="latin-1") as arquivo:
+            with open(stringNomeArquivo(), "r+", encoding="latin-1") as arquivo:
                 conteudo_arquivo = arquivo.read()
                 arquivo.seek(0, 0)                                 #cursor na primeira linha
                 arquivo.write(f"{previsaoTempo()}\n{conteudo_arquivo}")
                 arquivo.seek(0, 1)                                 #cursor na segunda linha
                 arquivo.write("\n")                                #Efeito de Enter
                 arquivo.write("ID\tData\tHora\tTarefa\n")
-    id_tarefa = sum(1 for _ in open(stringNomeArquivo())) -2       # conta o numero de linhas para gerar o ID da nova tarefa # adiciona a nova tarefa ao final do arquivo
-    hora_atual = datetime.datetime.now().strftime("%H:%M:%S")
-    with open(stringNomeArquivo(), "a") as arquivo:
-        arquivo.write(f"{id_tarefa}\t{stringDataAtual()}\t{hora_atual}\t{tarefa}\n")
+    id_tarefa = sum(1 for _ in open(stringNomeArquivo(), encoding="latin-1")) -2       # conta o numero de linhas para gerar o ID da nova tarefa # adiciona a nova tarefa ao final do arquivo
+    with open(stringNomeArquivo(), "a", encoding="latin-1") as arquivo:
+        arquivo.write(f"{id_tarefa}\t{stringDataAtual()}\t{stringHoraAtual()}\t{tarefa}\n")
     print("     ")
     print(f"Tarefa registrada com sucesso no arquivo {stringNomeArquivo()}!")
     print("     ")
@@ -165,18 +194,18 @@ def tarefasExecutar():
     perguntarTarefa()                                              # Inicia a funcao 
 
 def atualizarPrevisaoTempoArquivo():
-    with open(stringNomeArquivo(), 'r') as infoArquivo:
+    with open(stringNomeArquivo(), 'r', encoding="latin-1") as infoArquivo:
         linhas = infoArquivo.readlines()
         infoArquivo = ''.join(linhas[3:])
-        with open(stringNomeArquivo(), "w") as arquivo:
-            with open(stringNomeArquivo(), "r+") as arquivo:
+        with open(stringNomeArquivo(), "w", encoding="latin-1") as arquivo:
+            with open(stringNomeArquivo(), "r+", encoding="latin-1") as arquivo:
                 conteudo_arquivo = arquivo.read()
                 arquivo.seek(0, 0)                                 #cursor na primeira linha
                 arquivo.write(f"{previsaoTempo()}\n{conteudo_arquivo}")
                 arquivo.seek(0, 1)                                 #cursor na segunda linha
                 arquivo.write("\n")                                #Efeito de Enter
                 arquivo.write("ID\tData\tHora\tTarefa\n")
-    with open(stringNomeArquivo(), "a") as arquivo:
+    with open(stringNomeArquivo(), "a", encoding="latin-1") as arquivo:
         arquivo.write(infoArquivo)
     perguntarTarefa()
 
@@ -204,7 +233,7 @@ def openAIconfig():
         time.sleep(5)
         reniciar()
     if verificarInternet() == 1:
-        with open(caminhoCredenciais) as f:
+        with open(caminhoCredenciais, encoding="latin-1") as f:
             conteudo = f.readlines()
             openai.api_key = conteudo[2].split(';')[1].strip()     #Ler terceira linha coluna 2 (separacao ";" )
         model_engine = "text-davinci-002"                          # Defina o modelo GPT que deseja usar
@@ -223,7 +252,7 @@ def openAI():
         time.sleep(5)
         reniciar()
     if verificarInternet() == 1:
-        with open(caminhoCredenciais) as f:
+        with open(caminhoCredenciais, encoding="latin-1") as f:
             conteudo = f.readlines()
             openai.api_key = conteudo[2].split(';')[1].strip()       #Ler terceira linha coluna 2 (separacao ";" )
         model_engine = "text-davinci-002"                            # Defina o modelo GPT que deseja usar
